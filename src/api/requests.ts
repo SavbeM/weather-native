@@ -4,7 +4,7 @@ import {UserLocationData} from "../types/userInfoTypes";
 
 
 const axiosConfig: AxiosRequestConfig = {
-    baseURL: 'https://cors-anywhere.herokuapp.com/https://api.open-meteo.com/v1/forecast',
+    baseURL: 'https://api.open-meteo.com/v1/forecast',
     withCredentials: false,
     headers: {
         "Access-Control-Allow-Origin": "*",

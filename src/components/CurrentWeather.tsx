@@ -2,20 +2,11 @@ import React, {useEffect} from 'react';
 import {SafeAreaView, StyleSheet, Text, View} from "react-native";
 import {useSelector} from "react-redux";
 import {RootState} from "../store/store";
-import {getCurrentWeatherThunk} from "../store/currentWeatherReducer";
-
-import {useThunkDispatch} from "../hooks/hooks";
 
 
 const CurrentWeather: React.FC = () => {
-    const {lat, long} = useSelector((state: RootState) => state.userInfo)
-    const weather = useSelector((state: RootState) => state.currentWeather)
-    const dispatch = useThunkDispatch;
 
-    useEffect(() => {
-        lat && long &&
-        dispatch(getCurrentWeatherThunk(lat, long))
-    }, [])
+    const weather = useSelector((state: RootState) => state.currentWeather)
 
     useEffect(() => {
         console.log(weather)

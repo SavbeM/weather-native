@@ -1,16 +1,21 @@
 import {ActivityIndicator, Image, SafeAreaView, StyleSheet, Text, View} from 'react-native';
 import CurrentWeather from "./src/components/CurrentWeather";
-import {useEffect} from "react";
+import {FC, useEffect} from "react";
 import {getGeolocationAccessThunk, getUserLocationThunk} from "./src/store/userInfoReducer";
 import errorImage from "./assets/cancel.png"
 import {ErrorAnimation} from "./src/animations/ErrorAnimation";
 import React from 'react';
-import {useAppSelector, useThunkDispatch} from "./src/hooks/hooks";
+import { useDispatch, useSelector} from "react-redux";
+import {RootState} from "./src/store/store";
+import {ThunkDispatch} from "redux-thunk";
+import {AppThunkDispatch} from "./src/types/globalTypes";
 
 
 
 
-export const App = () => {
+export const App: FC = () => {
+
+
 
     const {
         lat,
@@ -19,16 +24,17 @@ export const App = () => {
         geolocationData,
         error,
         geolocationAccessStatus
-    } = useAppSelector((state) => state.userInfo);
+    } = useSelector((state: RootState) => state.userInfo);
 
-    const dispatch = useThunkDispatch
+    const dispatch = useDispatch<AppThunkDispatch>()
 
     useEffect(() => {
+        geolocationAccessStatus !== "granted" &&
          dispatch(getGeolocationAccessThunk());
     }, []);
 
     useEffect(() => {
-        lat && long &&
+        lat && long && !geolocationData &&
         dispatch(getUserLocationThunk(lat, long));
     }, [lat, long])
 
@@ -54,15 +60,12 @@ export const App = () => {
         )
     }
     if (geolocationData) {
-        console.log(geolocationData)
         return (
             <SafeAreaView style={styles.container}>
                 <CurrentWeather/>
-                <Text>Current weather</Text>
             </SafeAreaView>
         );
     }
-    return
 }
 
 const styles = StyleSheet.create({
