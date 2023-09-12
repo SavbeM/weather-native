@@ -7,15 +7,13 @@ import {ErrorAnimation} from "./src/animations/ErrorAnimation";
 import React from 'react';
 import { useDispatch, useSelector} from "react-redux";
 import {RootState} from "./src/store/store";
-import {ThunkDispatch} from "redux-thunk";
 import {AppThunkDispatch} from "./src/types/globalTypes";
+import {getTodayWeatherThunk} from "./src/store/todayWeatherReducer";
 
 
 
 
 export const App: FC = () => {
-
-
 
     const {
         lat,
@@ -29,6 +27,10 @@ export const App: FC = () => {
     const dispatch = useDispatch<AppThunkDispatch>()
 
     useEffect(() => {
+        lat && long &&
+            dispatch(getTodayWeatherThunk(lat, long))
+    }, [lat, long]);
+    useEffect(() => {
         geolocationAccessStatus !== "granted" &&
          dispatch(getGeolocationAccessThunk());
     }, []);
@@ -38,13 +40,20 @@ export const App: FC = () => {
         dispatch(getUserLocationThunk(lat, long));
     }, [lat, long])
 
-    if (geolocationAccessStatus === "undetermined" || isPending) {
-
+    if (isPending) {
         return (
             <SafeAreaView style={styles.container}>
                 <ActivityIndicator size="large" color="#00ff00"/>
             </SafeAreaView>
         )
+    }
+
+    if(geolocationAccessStatus === "denied"){
+       return <SafeAreaView style={styles.container}>
+            <Text>
+                Please allow the application to use your geolocation data
+            </Text>
+        </SafeAreaView>
     }
 
     if (error) {
@@ -60,11 +69,14 @@ export const App: FC = () => {
         )
     }
     if (geolocationData) {
-        return (
-            <SafeAreaView style={styles.container}>
-                <CurrentWeather/>
-            </SafeAreaView>
-        );
+         return (
+             <SafeAreaView style={styles.container}>
+                 <CurrentWeather/>
+             </SafeAreaView>
+         );
+     }
+   else {
+       return <></>
     }
 }
 
