@@ -1,20 +1,25 @@
 import {AnyAction, Dispatch} from "redux";
 import {
-    GeolocationAccessStatus, GetGeolocationAccessThunkType, GetUserLocationThunkType, SetCordsActionCreatorType,
-    SetGeolocationAccessStatusActionCreatorType, SetGeolocationDataActionCreatorType,
+    GeolocationAccessStatus,
+    GetGeolocationAccessThunkType,
+    GetUserLocationThunkType,
+    IsPendingActionCreatorType,
+    SetCordsActionCreatorType, SetErrorActionCreatorType,
+    SetGeolocationAccessStatusActionCreatorType,
+    SetGeolocationDataActionCreatorType,
     UserInfo,
     UserLocationData
 } from "../types/userInfoTypes";
 
-import {IS_PENDING, SET_ERROR} from "./currentWeatherReducer";
-import {IsPendingActionCreatorType, SetErrorActionCreatorType} from "../types/globalTypes";
+
 import * as Location from "expo-location";
 import {getGeolocationData} from "../api/requests";
 
 export const SET_GEOLOCATION_ACCESS_STATUS = "SET-GEOLOCATION-ACCESS-STATUS"
 export  const SET_GEOLOCATION_DATA = "SET-GEOLOCATION-DATA"
 export const SET_CORDS = "SET-CORDS"
-
+export const IS_PENDING_USER_INFO = 'IS-PENDING-USER-INFO'
+export const SET_ERROR_USER_INFO = "SET-ERROR-USER-INFO"
 
 const initialState: UserInfo = {
     long:  undefined,
@@ -26,11 +31,11 @@ const initialState: UserInfo = {
 }
 
 const isPendingActionCreator = (pendingStatus: boolean): IsPendingActionCreatorType => {
-    return {type: IS_PENDING, pendingStatus}
+    return {type: IS_PENDING_USER_INFO, pendingStatus}
 }
 
 const setErrorActionCreator = (error:  Error): SetErrorActionCreatorType => {
-    return{type: SET_ERROR, error}
+    return{type: SET_ERROR_USER_INFO, error}
 }
 
 export const setGeolocationDataActionCreator = (geolocationData:  UserLocationData): SetGeolocationDataActionCreatorType => {
@@ -86,11 +91,11 @@ export const userInfoReducer = (state = initialState, action: UserInfoActions) =
           return {...state, geolocationData: action.geolocationData}
       case SET_GEOLOCATION_ACCESS_STATUS:
           return {...state, geolocationAccessStatus: action.status}
-      case SET_ERROR:
+      case SET_ERROR_USER_INFO:
       return  {...state, error: action.error}
       case SET_CORDS:
           return {...state, long: action.coords.long, lat: action.coords.lat}
-      case IS_PENDING:
+      case IS_PENDING_USER_INFO:
           return {...state, isPending: action.pendingStatus}
       default:
           return state
