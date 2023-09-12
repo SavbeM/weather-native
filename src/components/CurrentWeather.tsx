@@ -1,21 +1,23 @@
 import React, {useEffect} from 'react';
-import {SafeAreaView, StyleSheet, Text, View} from "react-native";
-import {useSelector} from "react-redux";
+import { SafeAreaView, StyleSheet, Text, View} from "react-native";
+import {useDispatch, useSelector} from "react-redux";
+import {setCurrentWeatherActionCreator} from "../store/currentWeatherReducer";
 import {RootState} from "../store/store";
 
 
+
 const CurrentWeather: React.FC = () => {
-
-    const weather = useSelector((state: RootState) => state.currentWeather)
-
+    const dispatch = useDispatch()
+    const hourlyWeather = useSelector((state:RootState) => state.todayWeather.todayWeather?.hourly)
     useEffect(() => {
-        console.log(weather)
-    }, [weather])
+        hourlyWeather &&
+        dispatch(setCurrentWeatherActionCreator(hourlyWeather))
+    }, [hourlyWeather]);
 
     return (
         <SafeAreaView style={styles.container}>
             <View>
-                <Text>NA</Text>
+                <Text>123</Text>
             </View>
         </SafeAreaView>
     )
